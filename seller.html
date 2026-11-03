@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSphere Seller | Business Intelligence</title>
+    <style>
+        :root {
+            --sidebar-bg: #0f172a;
+            --primary: #2563eb;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #334155;
+            --accent-blue: #3b82f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg-body); display: flex; height: 100vh; overflow: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 300px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { padding: 35px 25px; text-align: center; font-size: 1.8rem; font-weight: 900; color: #60a5fa; border-bottom: 1px solid #1e293b; letter-spacing: -1px; }
+        
+        .nav-links { flex: 1; padding: 20px 0; list-style: none; overflow-y: auto; }
+        .nav-item { padding: 16px 30px; cursor: pointer; transition: 0.3s; color: #94a3b8; display: flex; align-items: center; gap: 15px; font-size: 0.95rem; font-weight: 500; }
+        .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
+
+        /* --- MAIN CONTENT --- */
+        .main-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* --- TOP NAVBAR --- */
+        .navbar { height: 80px; background: var(--white); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; border-bottom: 1px solid #e2e8f0; }
+        .nav-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+        .nav-profile { display: flex; align-items: center; gap: 15px; }
+        .profile-text { text-align: right; }
+        .profile-name { font-weight: 700; font-size: 0.9rem; }
+        .profile-email { font-size: 0.75rem; color: #64748b; }
+
+        /* --- CONTENT AREA --- */
+        .content-scroll { flex: 1; overflow-y: auto; padding: 40px; }
+        .page { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- COMPONENTS --- */
+        .section-header { margin-bottom: 30px; }
+        .card-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 40px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card h4 { font-size: 0.75rem; text-transform: uppercase; color: #64748b; margin-bottom: 10px; }
+        .card .val { font-size: 1.8rem; font-weight: 800; color: var(--sidebar-bg); }
+
+        .data-box { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 30px; }
+        .data-box h3 { margin-bottom: 20px; font-size: 1.1rem; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; background: #f8fafc; color: #64748b; font-size: 0.8rem; border-bottom: 2px solid #f1f5f9; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+
+        .badge { padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+        .bg-p { background: #dbeafe; color: #1e40af; } /* Processing */
+        .bg-s { background: #dcfce7; color: #166534; } /* Success/Delivered */
+
+        /* --- FOOTER --- */
+        footer { padding: 25px 40px; background: white; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR (Navigation Bar) -->
+    <div class="sidebar">
+        <div class="logo">SHOPSHERE</div>
+        <ul class="nav-links">
+            <li class="nav-item active" onclick="openP('dashboard', this)">🏛️ Dashboard</li>
+            <li class="nav-item" onclick="openP('manageProducts', this)">📦 Manage Products</li>
+            <li class="nav-item" onclick="openP('inventory', this)">📊 Inventory Management</li>
+            <li class="nav-item" onclick="openP('ordersReceived', this)">📝 Orders Received</li>
+            <li class="nav-item" onclick="openP('updateStatus', this)">🔄 Update Order Status</li>
+            <li class="nav-item" onclick="openP('payments', this)">💳 Payments</li>
+            <li class="nav-item" onclick="openP('deliveryUpdates', this)">🚚 Delivery Updates</li>
+            <li class="nav-item" onclick="openP('reports', this)">📈 Reports</li>
+            <li class="nav-item" onclick="openP('profile', this)">👤 Profile</li>
+        </ul>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+        <nav class="navbar">
+            <div class="nav-title" id="p-title">Dashboard Overview</div>
+            <div class="nav-profile">
+                <div class="profile-text">
+                    <p class="profile-name">Vishal Kumar</p>
+                    <p class="profile-email">wellvishal@gmail.com</p>
+                </div>
+                <div style="width:45px; height:45px; border-radius:12px; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold;">VK</div>
+            </div>
+        </nav>
+
+        <div class="content-scroll">
+
+            <!-- 1. DASHBOARD -->
+            <div id="dashboard" class="page active">
+                <div class="card-row">
+                    <div class="card"><h4>Total Earnings</h4><div class="val">₹5,42,000</div></div>
+                    <div class="card"><h4>Orders Today</h4><div class="val">24</div></div>
+                    <div class="card"><h4>Conversion Rate</h4><div class="val">3.2%</div></div>
+                    <div class="card"><h4>Store Rank</h4><div class="val">#12</div></div>
+                </div>
+                <div class="data-box">
+                    <h3>Performance Summary</h3>
+                    <p style="line-height:1.6; color:#64748b;">Vishal, your store "ShopSphere-Mega" has seen a 15% increase in traffic this week. Your top-performing category is **Electronics**. Ensure you update your stock for the upcoming weekend sale to maximize revenue.</p>
+                </div>
+            </div>
+
+            <!-- 2. MANAGE PRODUCTS -->
+            <div id="manageProducts" class="page">
+                <div class="section-header"><h3>Active Product Catalog</h3></div>
+                <div class="data-box">
+                    <table>
+                        <thead><tr><th>SKU</th><th>Product Name</th><th>Price</th><th>Category</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>SS-HP-01</td><td>Wireless Earbuds Pro</td><td>₹2,499</td><td>Audio</td><td><button>Edit</button></td></tr>
+                            <tr><td>SS-LP-99</td><td>MacBook Air Cover</td><td>₹999</td><td>Accessories</td><td><button>Edit</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. INVENTORY MANAGEMENT -->
+            <div id="inventory" class="page">
+                <div class="section-header"><h3>Stock & Warehouse Levels</h3></div>
+                <div class="data-box">
+                    <p style="margin-bottom:20px;">Detailed analysis of units currently available in ShopSphere hubs.</p>
+                    <table>
+                        <thead><tr><th>Item Name</th><th>Units Left</th><th>Warehouse Location</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr style="background:#fff1f2;"><td>Earbuds Pro</td><td>5</td><td>Delhi-NCR Hub</td><td><span style="color:red;">Low Stock Alert</span></td></tr>
+                            <tr><td>Leather Bag</td><td>450</td><td>Kanpur Hub</td><td><span style="color:green;">Healthy</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. ORDERS RECEIVED -->
+            <div id="ordersReceived" class="page">
+                <div class="section-header"><h3>Inbound Customer Orders</h3></div>
+                <div class="data-box">
+                    <table>
+                        <thead><tr><th>Order ID</th><th>Customer Name</th><th>Item Qty</th><th>Date</th></tr></thead>
+                        <tbody>
+                            <tr><td>#ORD-4521</td><td>Ankit Sharma</td><td>2 Items</td><td>04 May 2026</td></tr>
+                            <tr><td>#ORD-4522</td><td>Priya Gupta</td><td>1 Item</td><td>04 May 2026</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. UPDATE ORDER STATUS -->
+            <div id="updateStatus" class="page">
+                <div class="section-header"><h3>Logistics Pipeline Control</h3></div>
+                <div class="data-box">
+                    <p>Change the current processing stage for pending orders.</p>
+                    <table style="margin-top:20px;">
+                        <thead><tr><th>Order ID</th><th>Current Status</th><th>Update To</th></tr></thead>
+                        <tbody>
+                            <tr><td>#ORD-4521</td><td><span class="badge bg-p">Processing</span></td><td><button>Mark Shipped</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. PAYMENTS -->
+            <div id="payments" class="page">
+                <div class="section-header"><h3>Settlements & Payout Ledger</h3></div>
+                <div class="card-row">
+                    <div class="card" style="border-left: 5px solid #10b981;"><h4>Cleared Funds</h4><div class="val">₹1,20,000</div></div>
+                    <div class="card" style="border-left: 5px solid #f59e0b;"><h4>Escrow (Locked)</h4><div class="val">₹14,500</div></div>
+                </div>
+            </div>
+
+            <!-- 7. DELIVERY UPDATES -->
+            <div id="deliveryUpdates" class="page">
+                <div class="section-header"><h3>Last-Mile Tracking</h3></div>
+                <div class="data-box">
+                    <p>Monitoring couriers and delivery partners for active shipments.</p>
+                    <div style="margin-top:20px; padding:20px; background:#f8fafc; border-radius:10px;">
+                        <strong>Order #ORD-4521:</strong> Out for Delivery (Rider: Suresh Kumar)
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. REPORTS -->
+            <div id="reports" class="page">
+                <div class="section-header"><h3>Business Analytics & Insights</h3></div>
+                <div class="data-box">
+                    <p>Download your monthly P&L (Profit and Loss) and GST reports.</p>
+                    <button style="margin-top:20px; padding:10px 20px; cursor:pointer;">Generate May 2026 Report</button>
+                </div>
+            </div>
+
+            <!-- 9. PROFILE -->
+            <div id="profile" class="page">
+                <div class="section-header"><h3>Seller Identity Settings</h3></div>
+                <div class="data-box" style="max-width: 600px;">
+                    <p><strong>Business Name:</strong> ShopSphere-Mega Store</p>
+                    <p><strong>Primary Seller:</strong> Vishal Kumar</p>
+                    <p><strong>Contact:</strong> wellvishal@gmail.com</p>
+                    <p><strong>Verified GST:</strong> 09AAAAA0000A1Z5</p>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <div>© 2026 <strong>ShopSphere Marketplace</strong>. Full System Control.</div>
+            <div>Admin: <strong>Kishori Kumari</strong> | Sector 62, Noida</div>
+        </footer>
+    </div>
+
+    <script>
+        function openP(pageId, element) {
+            // Update Top Title
+            document.getElementById('p-title').innerText = element.innerText;
+
+            // Page Switch
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            // Nav Active State
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // Scroll Top
+            document.querySelector('.content-scroll').scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
